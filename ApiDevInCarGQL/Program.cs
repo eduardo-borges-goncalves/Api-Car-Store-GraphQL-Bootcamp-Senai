@@ -1,18 +1,29 @@
 using ApiDevInCarGQL.Context;
+using ApiDevInCarGQL.Models;
+using ApiDevInCarGQL.Mutations;
 using ApiDevInCarGQL.Queries;
+using ApiDevInCarGQL.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services
-    .AddGraphQLServer()
-
-    .AddQueryType<Query>();
-
 builder.Services.AddDbContext<DevInCarContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ServerConnection")));
+
+builder.Services
+    .AddScoped<IVehicleRepository, VehicleRepository>()
+    .AddGraphQLServer()
+
+    .AddQueryType()
+        .AddTypeExtension<CarQuery>()
+
+    .AddMutationType()
+        .AddTypeExtension<VehicleMutation>()
+        
+        .AddType<Vehicle>();
+
 
 // cors
 builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
@@ -39,8 +50,7 @@ app.UseWebSockets()
 
 app.Run();
 
-// como construir repository
-// porque precisa da injeção de dependência 
-
-// ver injeções de dependências entra nesse momento? 
-// partir para graphql e métodos como listar veículos
+// mutations
+// jwt
+// subscription
+// autorizações 
