@@ -1,13 +1,12 @@
 ﻿using ApiDevInCarGQL.Context;
 using ApiDevInCarGQL.Models;
 using ApiDevInCarGQL.Repositories;
-using ApiDevInCarGQL.Services;
 
 namespace ApiDevInCarGQL.Queries
 {
 
     [ExtendObjectType(OperationTypeNames.Query)]
-    public class CarQuery
+    public class VehicleQuery
     {
 
         public Task<List<Vehicle>> veiculos(
@@ -48,12 +47,6 @@ namespace ApiDevInCarGQL.Queries
         {
             var vehicle = _vehicleRepository.GetCheapSelled(tipoVeiculo);
             return vehicle;
-        }
-
-        public string getAcessToken([Service] ITokenService _tokenService, string user)
-        {
-            var accessToken = _tokenService.GenerateJwt(user);
-            return accessToken;
         }
     }
 }

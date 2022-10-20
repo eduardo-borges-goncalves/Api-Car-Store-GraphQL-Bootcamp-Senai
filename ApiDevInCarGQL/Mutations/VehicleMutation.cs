@@ -1,7 +1,8 @@
 ﻿using ApiDevInCarGQL.Models;
 using ApiDevInCarGQL.Repositories;
+using ApiDevInCarGQL.Subscriptions;
 using HotChocolate.AspNetCore.Authorization;
-using System.Security.Claims;
+using HotChocolate.Subscriptions;
 
 namespace ApiDevInCarGQL.Mutations
 {
@@ -9,16 +10,17 @@ namespace ApiDevInCarGQL.Mutations
     public class VehicleMutation
     {
         [Authorize]
-        public Task<Transaction> venderVeiculo(
-            ClaimsPrincipal claimsPrincipal,
+        public async Task<int> venderVeiculo(
             [Service] IVehicleRepository _vehicleRepository,
+            [Service] ITopicEventSender eventSender,
             int idVeiculo,
             string cpf, 
-            DateTime date
+            DateTime? date
             )
         {      
-            var transaction = _vehicleRepository.SellVehicle(idVeiculo, cpf, date);
-            return transaction;
+            var vehicle = _vehicleRepository.SellVehicle(idVeiculo, cpf, date);
+            await eventSender.SendAsync(nameof(VehicleSubscription.VeiculoVendido), vehicle).ConfigureAwait(false);
+            return idVeiculo;
         }
 
         public Task<Vehicle> alterarCor(
@@ -41,14 +43,15 @@ namespace ApiDevInCarGQL.Mutations
             return car;
         }
 
-        // proteger
         [Authorize()]
-        public Task<Vehicle> novoVeiculo(
+        public async Task<int> novoVeiculo(
             [Service] IVehicleRepository _vehicleRepository,
+            [Service] ITopicEventSender eventSender,
             Vehicle vehicle)
         {
             var newVehicle = _vehicleRepository.CreateVehicle(vehicle);
-            return newVehicle;
+            await eventSender.SendAsync(nameof(VehicleSubscription.VeiculoAdicionado), newVehicle).ConfigureAwait(true);
+            return newVehicle.Id;
         }
     }
 }

@@ -3,7 +3,7 @@ using ApiDevInCarGQL.Models;
 using ApiDevInCarGQL.Mutations;
 using ApiDevInCarGQL.Queries;
 using ApiDevInCarGQL.Repositories;
-using ApiDevInCarGQL.Services;
+using ApiDevInCarGQL.Subscriptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -37,17 +37,24 @@ builder.Services.AddDbContext<DevInCarContext>(options =>
 
 builder.Services
     .AddScoped<IVehicleRepository, VehicleRepository>()
-    .AddScoped<ITokenService, TokenService>();
+    
+    .AddScoped<IUserRepository, UserRepository>();
 
 builder.Services
     .AddGraphQLServer()
     .AddAuthorization()
 
     .AddQueryType()
-        .AddTypeExtension<CarQuery>()
+        .AddTypeExtension<VehicleQuery>()
 
     .AddMutationType()
         .AddTypeExtension<VehicleMutation>()
+        .AddTypeExtension<AuthMutation>()
+
+    .AddSubscriptionType()
+        .AddTypeExtension<VehicleSubscription>()
+    
+    .AddInMemorySubscriptions()
 
         .AddType<Vehicle>();
 
@@ -81,6 +88,5 @@ app.UseWebSockets()
 
 app.Run();
 
-// jwt
-// subscription
-// autorizações 
+// FOCAR NAS SUBSCRIPTIONS 
+// ESQUECER AUTENTICAÇÃO 

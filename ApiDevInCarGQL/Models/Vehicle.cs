@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using HotChocolate.AspNetCore.Authorization;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 
@@ -22,9 +23,11 @@ namespace ApiDevInCarGQL.Models
         [Key]
         public int? IdVehicle { get; set; }
         public VehicleType VehicleType { get; set; }
+        [Authorize]
         public int Chassis { get; set; }
         public DateTime ManufacturingDate { get; set; }
         public string Name { get; set; }
+        [Authorize]
         public string LicensePlate { get; set; }
         public double Value { get; set; }
         public string Color { get; set; }

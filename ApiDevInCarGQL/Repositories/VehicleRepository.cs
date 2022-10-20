@@ -154,7 +154,7 @@ namespace ApiDevInCarGQL.Repositories
             return updatedVehicle;
         }
 
-        public async Task<Transaction> SellVehicle(int idVehicle, string cpf, DateTime date)
+        public async Task<Vehicle> SellVehicle(int idVehicle, string cpf, DateTime? date)
         {
             var transaction = new Transaction(cpf, idVehicle, date);
             _context.Transactions.Add(transaction);
@@ -169,7 +169,7 @@ namespace ApiDevInCarGQL.Repositories
             _context.Entry(selledVehicle).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return transaction;
+            return selledVehicle;
         }
     }
 }

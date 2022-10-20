@@ -18,10 +18,10 @@ namespace ApiDevInCarGQL.Models
         [Column("IdVehicle")]
         [ForeignKey("Vehicle")]
         public int IdVehicle { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
 
         public Transaction() { }
-        public Transaction(string cpf, int idVehicle, DateTime date)
+        public Transaction(string cpf, int idVehicle, DateTime? date)
         {
             Cpf = cpf;
             IdVehicle = idVehicle;
