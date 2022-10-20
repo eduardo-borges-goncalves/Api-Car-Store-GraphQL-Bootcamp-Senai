@@ -24,11 +24,11 @@ namespace ApiDevInCarGQL.Migrations
 
             modelBuilder.Entity("ApiDevInCarGQL.Models.Customer", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("IdCustomer")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCustomer"), 1L, 1);
 
                     b.Property<string>("Cpf")
                         .IsRequired()
@@ -39,38 +39,63 @@ namespace ApiDevInCarGQL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("IdCustomer");
 
                     b.ToTable("Customers");
 
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            IdCustomer = 1,
                             Cpf = "01101101101",
                             Name = "Pedro"
                         },
                         new
                         {
-                            Id = 2,
+                            IdCustomer = 2,
                             Cpf = "01181101101",
                             Name = "Marcia"
                         },
                         new
                         {
-                            Id = 3,
+                            IdCustomer = 3,
                             Cpf = "01101901101",
                             Name = "Alfredo"
                         });
                 });
 
-            modelBuilder.Entity("ApiDevInCarGQL.Models.Vehicle", b =>
+            modelBuilder.Entity("ApiDevInCarGQL.Models.Transaction", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("IdTransaction")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("IdTransaction"), 1L, 1);
+
+                    b.Property<string>("Cpf")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("IdCustomer");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IdVehicle")
+                        .HasColumnType("int")
+                        .HasColumnName("IdVehicle");
+
+                    b.HasKey("IdTransaction");
+
+                    b.ToTable("Transactions");
+                });
+
+            modelBuilder.Entity("ApiDevInCarGQL.Models.Vehicle", b =>
+                {
+                    b.Property<int>("IdVehicle")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdVehicle"), 1L, 1);
 
                     b.Property<bool>("Available")
                         .HasColumnType("bit");
@@ -90,6 +115,10 @@ namespace ApiDevInCarGQL.Migrations
 
                     b.Property<int?>("Fuel")
                         .HasColumnType("int");
+
+                    b.Property<int>("IdTransaction")
+                        .HasColumnType("int")
+                        .HasColumnName("IdTransaction");
 
                     b.Property<string>("LicensePlate")
                         .IsRequired()
@@ -115,21 +144,22 @@ namespace ApiDevInCarGQL.Migrations
                     b.Property<int?>("Wheels")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("IdVehicle");
 
                     b.ToTable("Vehicles");
 
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            Available = false,
+                            IdVehicle = 1,
+                            Available = true,
                             Chassis = 0,
                             Color = "Azul",
                             Doors = 4,
                             Fuel = 1,
+                            IdTransaction = 0,
                             LicensePlate = "NKI9089",
-                            ManufacturingDate = new DateTime(2022, 10, 18, 22, 11, 0, 136, DateTimeKind.Local).AddTicks(8171),
+                            ManufacturingDate = new DateTime(2022, 10, 19, 20, 3, 36, 167, DateTimeKind.Local).AddTicks(4186),
                             Name = "Punto",
                             Power = "260",
                             Value = 189.0,
@@ -137,12 +167,13 @@ namespace ApiDevInCarGQL.Migrations
                         },
                         new
                         {
-                            Id = 4,
-                            Available = false,
+                            IdVehicle = 2,
+                            Available = true,
                             Chassis = 0,
                             Color = "Vermelha",
+                            IdTransaction = 0,
                             LicensePlate = "Npl5589",
-                            ManufacturingDate = new DateTime(2022, 10, 18, 22, 11, 0, 138, DateTimeKind.Local).AddTicks(3852),
+                            ManufacturingDate = new DateTime(2022, 10, 19, 20, 3, 36, 169, DateTimeKind.Local).AddTicks(175),
                             Name = "twister",
                             Power = "2",
                             Value = 19.0,
@@ -151,15 +182,16 @@ namespace ApiDevInCarGQL.Migrations
                         },
                         new
                         {
-                            Id = 2,
-                            Available = false,
+                            IdVehicle = 3,
+                            Available = true,
                             BucketCapacity = 200,
                             Chassis = 0,
                             Color = "Preto",
                             Doors = 4,
                             Fuel = 2,
+                            IdTransaction = 0,
                             LicensePlate = "MJE9089",
-                            ManufacturingDate = new DateTime(2022, 10, 18, 22, 11, 0, 138, DateTimeKind.Local).AddTicks(4030),
+                            ManufacturingDate = new DateTime(2022, 10, 19, 20, 3, 36, 169, DateTimeKind.Local).AddTicks(369),
                             Name = "Amarok",
                             Power = "200",
                             Value = 400.0,
@@ -167,14 +199,15 @@ namespace ApiDevInCarGQL.Migrations
                         },
                         new
                         {
-                            Id = 3,
-                            Available = false,
+                            IdVehicle = 4,
+                            Available = true,
                             Chassis = 0,
                             Color = "Rosa",
                             Doors = 4,
                             Fuel = 0,
+                            IdTransaction = 0,
                             LicensePlate = "KKO9089",
-                            ManufacturingDate = new DateTime(2022, 10, 18, 22, 11, 0, 138, DateTimeKind.Local).AddTicks(4234),
+                            ManufacturingDate = new DateTime(2022, 10, 19, 20, 3, 36, 169, DateTimeKind.Local).AddTicks(532),
                             Name = "Lancer",
                             Power = "456",
                             Value = 89.0,

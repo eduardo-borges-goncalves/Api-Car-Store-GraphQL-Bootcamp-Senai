@@ -1,46 +1,48 @@
 ﻿using ApiDevInCarGQL.Models;
 using ApiDevInCarGQL.Repositories;
+using HotChocolate.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace ApiDevInCarGQL.Mutations
 {
     [ExtendObjectType(OperationTypeNames.Mutation)]
     public class VehicleMutation
     {
-        //public Task<List<Vehicle>> venderVeiculo(
-        //   [Service] ICarRepository _carRepository,
-        //   string tipoVeiculo)
-        //{
-        //    switch (tipoVeiculo)
-        //    {
-        //        case ("carro"):
-        //            var cars = _carRepository.GetAll();
-        //            return cars;
+        [Authorize]
+        public Task<Transaction> venderVeiculo(
+            ClaimsPrincipal claimsPrincipal,
+            [Service] IVehicleRepository _vehicleRepository,
+            int idVeiculo,
+            string cpf, 
+            DateTime date
+            )
+        {      
+            var transaction = _vehicleRepository.SellVehicle(idVeiculo, cpf, date);
+            return transaction;
+        }
 
-        //    }
-        //}
+        public Task<Vehicle> alterarCor(
+            [Service] IVehicleRepository _vehicleRepository,
+            int idVeiculo, 
+            string cor
+            )
+        {
+            var car = _vehicleRepository.UpdateColor(idVeiculo, cor);
+            return car;
+        }
 
-        //public Task<List<Vehicle>> alterarCor(
-        //    [Service] ICarRepository _carRepository,
-        //    string tipoVeiculo)
-        //{
-        //    switch (tipoVeiculo)
-        //    {
-        //        case ("carro"):
-        //            var cars = _carRepository.GetAll();
-        //            return cars;
+        public Task<Vehicle> alterarValor(
+           [Service] IVehicleRepository _vehicleRepository,
+            double valor,
+            int idVeiculo
+            )
+        {
+            var car = _vehicleRepository.UpdateValue(idVeiculo, valor);
+            return car;
+        }
 
-        //    }
-        //}
-
-        //public Task<List<Vehicle>> alterarValor(
-        //    [Service] ICarRepository _carRepository,
-        //    string tipoVeiculo)
-        //{
-
-        //            var cars = _carRepository.GetAll();
-        //            return cars;
-        //}
-
+        // proteger
+        [Authorize()]
         public Task<Vehicle> novoVeiculo(
             [Service] IVehicleRepository _vehicleRepository,
             Vehicle vehicle)

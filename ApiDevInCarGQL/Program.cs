@@ -3,26 +3,54 @@ using ApiDevInCarGQL.Models;
 using ApiDevInCarGQL.Mutations;
 using ApiDevInCarGQL.Queries;
 using ApiDevInCarGQL.Repositories;
+using ApiDevInCarGQL.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("TokenSettings"));
+builder.Services.AddAuthorization();
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidIssuer = builder.Configuration.GetSection("TokenSettings").GetValue<string>("Issuer"),
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidAudience = builder.Configuration.GetSection("TokenSettings").GetValue<string>("Audience"),
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration.GetSection("TokenSettings").GetValue<string>("Key"))
+            ),
+        };
+    });
 
 builder.Services.AddDbContext<DevInCarContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ServerConnection")));
 
 builder.Services
     .AddScoped<IVehicleRepository, VehicleRepository>()
+    .AddScoped<ITokenService, TokenService>();
+
+builder.Services
     .AddGraphQLServer()
+    .AddAuthorization()
 
     .AddQueryType()
         .AddTypeExtension<CarQuery>()
 
     .AddMutationType()
         .AddTypeExtension<VehicleMutation>()
-        
+
         .AddType<Vehicle>();
+
 
 
 // cors
@@ -43,6 +71,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 //app.MapGraphQL();
 app.UseWebSockets()
   .UseRouting()
@@ -50,7 +81,6 @@ app.UseWebSockets()
 
 app.Run();
 
-// mutations
 // jwt
 // subscription
 // autorizações 

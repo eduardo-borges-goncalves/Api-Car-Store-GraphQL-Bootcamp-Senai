@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 
 namespace ApiDevInCarGQL.Models
@@ -18,7 +19,8 @@ namespace ApiDevInCarGQL.Models
 
     public class Vehicle
     {
-        public int? Id { get; set; }
+        [Key]
+        public int? IdVehicle { get; set; }
         public VehicleType VehicleType { get; set; }
         public int Chassis { get; set; }
         public DateTime ManufacturingDate { get; set; }
@@ -35,80 +37,14 @@ namespace ApiDevInCarGQL.Models
         public int? Wheels { get; set; }
         public int? BucketCapacity { get; set; }
 
+        [Column("IdTransaction")]
+        [ForeignKey("Transaction")]
+        public int? IdTransaction { get; set; }
+
 
         Random randNum = new Random();
 
         public Vehicle() { }
-
-        //public Vehicle(
-        //    int id, 
-        //    VehicleType vehicleType,
-        //    DateTime manufacturingDate,
-        //    string name, 
-        //    string licensePlate,
-        //    double value, 
-        //    string color,
-        //    string power, 
-        //    int doors, 
-        //    Fuel fuel
-        //    ) : this(id, vehicleType, manufacturingDate, name, licensePlate, value, color, power)
-        //{
-        //    Doors = doors;
-        //    Fuel = fuel;
-        //}       
-        //public Vehicle(
-        //    int id, 
-        //    VehicleType vehicleType,
-        //    DateTime manufacturingDate,
-        //    string name, 
-        //    string licensePlate,
-        //    double value, 
-        //    string color,
-        //    string power, 
-        //    int? wheels 
-        //    ) : this(id, vehicleType, manufacturingDate, name, licensePlate, value, color, power)
-        //{
-        //    Wheels = wheels;
-        //}    
-        //public Vehicle(
-        //    int id, 
-        //    VehicleType vehicleType,
-        //    DateTime manufacturingDate,
-        //    string name, 
-        //    string licensePlate,
-        //    double value, 
-        //    string color,
-        //    string power, 
-        //    Fuel? fuel, 
-        //    int bucketCapacity
-        //    ) : this(id, vehicleType, manufacturingDate, name, licensePlate, value, color, power)
-        //{
-        //    Fuel = fuel;
-        //    BucketCapacity = bucketCapacity;
-        //}
-
-        //public Vehicle(
-        //    int id,
-        //    VehicleType vehicleType,
-        //    DateTime ManufacturingDate,
-        //    string name,
-        //    string licensePlate,
-        //    double value,
-        //    string color,
-        //    string power
-        //    )
-        //{
-        //    Id = id;
-        //    VehicleType = vehicleType;
-        //    this.Chassis = randNum.Next();
-        //    this.ManufacturingDate = ManufacturingDate;
-        //    this.Name = name;
-        //    this.LicensePlate = licensePlate;
-        //    this.Value = value;
-        //    this.Color = color;
-        //    this.Available = true;
-        //    this.Power = power;
-        //}
 
         public Vehicle(
             VehicleType vehicleType,
@@ -121,7 +57,8 @@ namespace ApiDevInCarGQL.Models
             Fuel fuel,
             int bucketCapacity,
             int wheels,
-            int doors
+            int doors, 
+            int id
         )
         {
             VehicleType = vehicleType;
@@ -137,7 +74,7 @@ namespace ApiDevInCarGQL.Models
             Doors = doors;
             BucketCapacity = bucketCapacity;
             Wheels = wheels;
-
+            IdVehicle = id;
         }
     }
 }

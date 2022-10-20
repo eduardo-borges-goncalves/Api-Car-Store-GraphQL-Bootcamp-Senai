@@ -10,7 +10,8 @@ namespace ApiDevInCarGQL.Repositories
         Task<List<Vehicle>> GetSelled(string type);
         Task<Vehicle> GetExpensiveSelled(string type);
         Task<Vehicle> GetCheapSelled(string type);
-        Task<Vehicle> UpdateColor(int chassis, string color);
-        Task<Vehicle> UpdateValue(int chassis, double value);
+        Task<Vehicle> UpdateColor(int idVehicle, string color);
+        Task<Vehicle> UpdateValue(int idVehicle, double value);
+        Task<Transaction> SellVehicle(int idVehicle, string cpf, DateTime date);
     }
 }

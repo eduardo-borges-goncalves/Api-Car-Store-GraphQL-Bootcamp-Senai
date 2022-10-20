@@ -12,6 +12,7 @@ namespace ApiDevInCarGQL.Context
 
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
