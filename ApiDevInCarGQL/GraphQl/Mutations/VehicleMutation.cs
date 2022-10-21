@@ -10,7 +10,7 @@ namespace ApiDevInCarGQL.Mutations
     public class VehicleMutation
     {
         [Authorize]
-        public async Task<int> venderVeiculo(
+        public async Task<Vehicle> venderVeiculo(
             [Service] IVehicleRepository _vehicleRepository,
             [Service] ITopicEventSender eventSender,
             int idVeiculo,
@@ -18,9 +18,9 @@ namespace ApiDevInCarGQL.Mutations
             DateTime? date
             )
         {      
-            var vehicle = _vehicleRepository.SellVehicle(idVeiculo, cpf, date);
-            await eventSender.SendAsync(nameof(VehicleSubscription.VeiculoVendido), vehicle).ConfigureAwait(false);
-            return idVeiculo;
+            var vehicle = await _vehicleRepository.SellVehicle(idVeiculo, cpf, date);
+            await eventSender.SendAsync(vehicle.VehicleType, vehicle).ConfigureAwait(false);
+            return vehicle;
         }
 
         public Task<Vehicle> alterarCor(
@@ -44,14 +44,14 @@ namespace ApiDevInCarGQL.Mutations
         }
 
         [Authorize()]
-        public async Task<int> novoVeiculo(
+        public async Task<Vehicle> novoVeiculo(
             [Service] IVehicleRepository _vehicleRepository,
             [Service] ITopicEventSender eventSender,
             Vehicle vehicle)
         {
-            var newVehicle = _vehicleRepository.CreateVehicle(vehicle);
-            await eventSender.SendAsync(nameof(VehicleSubscription.VeiculoAdicionado), newVehicle).ConfigureAwait(true);
-            return newVehicle.Id;
+            var newVehicle = await _vehicleRepository.CreateVehicle(vehicle);
+            await eventSender.SendAsync(vehicle.VehicleType, vehicle).ConfigureAwait(true);
+            return newVehicle;
         }
     }
 }

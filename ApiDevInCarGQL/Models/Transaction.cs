@@ -9,10 +9,13 @@ namespace ApiDevInCarGQL.Models
         [Key]
         public int? IdTransaction { get; set; }
 
+        public Customer? Customer { get; set; }
         [Required]
         [Column("IdCustomer")]
         [ForeignKey("Customer")]
         public string Cpf { get; set; }
+
+        public Vehicle? Vehicle { get; set; }
 
         [Required]
         [Column("IdVehicle")]

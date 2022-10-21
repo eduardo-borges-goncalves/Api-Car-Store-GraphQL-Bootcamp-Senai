@@ -33,17 +33,16 @@ namespace ApiDevInCarGQL.Models
         public string Color { get; set; }
         public bool Available { get; set; }
         public string Power { get; set; }
-
-        ///////
         public int? Doors { get; set; }
         public Fuel? Fuel { get; set; }
         public int? Wheels { get; set; }
         public int? BucketCapacity { get; set; }
 
+        public Transaction? transaction { get; set; }
+
         [Column("IdTransaction")]
         [ForeignKey("Transaction")]
         public int? IdTransaction { get; set; }
-
 
         Random randNum = new Random();
 

@@ -58,8 +58,6 @@ builder.Services
 
         .AddType<Vehicle>();
 
-
-
 // cors
 builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
 {
@@ -87,6 +85,3 @@ app.UseWebSockets()
   .UseEndpoints(endpoint => endpoint.MapGraphQL());
 
 app.Run();
-
-// FOCAR NAS SUBSCRIPTIONS 
-// ESQUECER AUTENTICAÇÃO 

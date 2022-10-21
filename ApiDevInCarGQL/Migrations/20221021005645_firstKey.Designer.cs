@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiDevInCarGQL.Migrations
 {
     [DbContext(typeof(DevInCarContext))]
-    [Migration("20221019230237_firstMigration")]
-    partial class firstMigration
+    [Migration("20221021005645_firstKey")]
+    partial class firstKey
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,42 +26,38 @@ namespace ApiDevInCarGQL.Migrations
 
             modelBuilder.Entity("ApiDevInCarGQL.Models.Customer", b =>
                 {
-                    b.Property<int>("IdCustomer")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCustomer"), 1L, 1);
-
                     b.Property<string>("Cpf")
-                        .IsRequired()
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)");
+
+                    b.Property<int>("IdCustomer")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("IdCustomer");
+                    b.HasKey("Cpf");
 
                     b.ToTable("Customers");
 
                     b.HasData(
                         new
                         {
-                            IdCustomer = 1,
                             Cpf = "01101101101",
+                            IdCustomer = 1,
                             Name = "Pedro"
                         },
                         new
                         {
-                            IdCustomer = 2,
                             Cpf = "01181101101",
+                            IdCustomer = 2,
                             Name = "Marcia"
                         },
                         new
                         {
-                            IdCustomer = 3,
                             Cpf = "01101901101",
+                            IdCustomer = 3,
                             Name = "Alfredo"
                         });
                 });
@@ -76,10 +72,10 @@ namespace ApiDevInCarGQL.Migrations
 
                     b.Property<string>("Cpf")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("nvarchar(11)")
                         .HasColumnName("IdCustomer");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime?>("Date")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("IdVehicle")
@@ -87,6 +83,11 @@ namespace ApiDevInCarGQL.Migrations
                         .HasColumnName("IdVehicle");
 
                     b.HasKey("IdTransaction");
+
+                    b.HasIndex("Cpf");
+
+                    b.HasIndex("IdVehicle")
+                        .IsUnique();
 
                     b.ToTable("Transactions");
                 });
@@ -160,7 +161,7 @@ namespace ApiDevInCarGQL.Migrations
                             Doors = 4,
                             Fuel = 1,
                             LicensePlate = "NKI9089",
-                            ManufacturingDate = new DateTime(2022, 10, 19, 20, 2, 37, 253, DateTimeKind.Local).AddTicks(265),
+                            ManufacturingDate = new DateTime(2022, 10, 20, 21, 56, 44, 476, DateTimeKind.Local).AddTicks(5316),
                             Name = "Punto",
                             Power = "260",
                             Value = 189.0,
@@ -173,7 +174,7 @@ namespace ApiDevInCarGQL.Migrations
                             Chassis = 0,
                             Color = "Vermelha",
                             LicensePlate = "Npl5589",
-                            ManufacturingDate = new DateTime(2022, 10, 19, 20, 2, 37, 254, DateTimeKind.Local).AddTicks(3655),
+                            ManufacturingDate = new DateTime(2022, 10, 20, 21, 56, 44, 479, DateTimeKind.Local).AddTicks(4154),
                             Name = "twister",
                             Power = "2",
                             Value = 19.0,
@@ -190,7 +191,7 @@ namespace ApiDevInCarGQL.Migrations
                             Doors = 4,
                             Fuel = 2,
                             LicensePlate = "MJE9089",
-                            ManufacturingDate = new DateTime(2022, 10, 19, 20, 2, 37, 254, DateTimeKind.Local).AddTicks(3868),
+                            ManufacturingDate = new DateTime(2022, 10, 20, 21, 56, 44, 479, DateTimeKind.Local).AddTicks(4503),
                             Name = "Amarok",
                             Power = "200",
                             Value = 400.0,
@@ -205,12 +206,36 @@ namespace ApiDevInCarGQL.Migrations
                             Doors = 4,
                             Fuel = 0,
                             LicensePlate = "KKO9089",
-                            ManufacturingDate = new DateTime(2022, 10, 19, 20, 2, 37, 254, DateTimeKind.Local).AddTicks(4026),
+                            ManufacturingDate = new DateTime(2022, 10, 20, 21, 56, 44, 479, DateTimeKind.Local).AddTicks(4792),
                             Name = "Lancer",
                             Power = "456",
                             Value = 89.0,
                             VehicleType = 1
                         });
+                });
+
+            modelBuilder.Entity("ApiDevInCarGQL.Models.Transaction", b =>
+                {
+                    b.HasOne("ApiDevInCarGQL.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("Cpf")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ApiDevInCarGQL.Models.Vehicle", "Vehicle")
+                        .WithOne("transaction")
+                        .HasForeignKey("ApiDevInCarGQL.Models.Transaction", "IdVehicle")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Vehicle");
+                });
+
+            modelBuilder.Entity("ApiDevInCarGQL.Models.Vehicle", b =>
+                {
+                    b.Navigation("transaction");
                 });
 #pragma warning restore 612, 618
         }
